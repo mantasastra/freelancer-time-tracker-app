@@ -1,10 +1,5 @@
-import express from "express";
+import app from "./src/app";
 
-const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
-app.get("/", (req, res) => res.send("Express + TypeScript Server"));
-
-app.listen(PORT, () => {
-  console.log(`Server is running at https://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`API started on port ${PORT}`));
