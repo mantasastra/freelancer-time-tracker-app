@@ -4,13 +4,13 @@ import Session from "./Session.model";
 type Data = {
   name: string;
   time: number;
+  startDate: string;
 };
 
-export const addSession = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+/**
+ * POST /api/session/add
+ **/
+export const addSession = (req: Request, res: Response, next: NextFunction) => {
   const data: Data = req.body;
 
   if (!data.name || !data.time) {
@@ -23,10 +23,31 @@ export const addSession = async (
   const newSession = new Session({
     name: data.name,
     time: data.time,
+    startDate: data.startDate,
   });
 
   newSession
     .save()
     .then(() => res.json({ message: "Session has been saved" }))
     .catch((err) => console.error(err));
+};
+
+/**
+ * GET /api/session/list
+ **/
+export const getAllSessions = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  Session.find({}, (err, sessions) => {
+    if (err) {
+      res.status(400);
+      res.json({
+        error: "There are no saved sessions.",
+      });
+    }
+
+    res.json(sessions);
+  });
 };

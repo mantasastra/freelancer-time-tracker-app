@@ -14,6 +14,10 @@ const SessionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  startDate: {
+    type: String,
+    required: true,
+  },
 });
 
 const Session = mongoose.model<ISession>("Session", SessionSchema);

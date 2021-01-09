@@ -5,4 +5,6 @@ const router = Router();
 
 router.post("/add", SessionController.addSession);
 
+router.get("/list", SessionController.getAllSessions);
+
 export default router;

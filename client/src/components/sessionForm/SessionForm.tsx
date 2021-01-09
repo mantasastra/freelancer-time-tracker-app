@@ -11,6 +11,7 @@ type SessionState = {
   status: string;
   name: string;
   timer: number;
+  startDate: Date | null;
   message: string | null;
   error: string | null;
 };
@@ -24,16 +25,18 @@ const SessionForm: React.FC = () => {
     status: "idle",
     name: "",
     timer: 0,
+    startDate: null,
     message: null,
     error: null,
   });
   const timerRef: TimerRef = useRef(0);
-  const { status, name, timer, error } = state;
+  const { status, name, timer, startDate, error } = state;
 
   const startTimer = () => {
     setState((prevState) => ({
       ...prevState,
       status: "started",
+      startDate: new Date(),
     }));
 
     timerRef.current = setInterval(() => {
@@ -60,6 +63,7 @@ const SessionForm: React.FC = () => {
       status: "idle",
       name: "",
       timer: 0,
+      startDate: null,
       message: null,
       error: null,
     });
@@ -79,6 +83,7 @@ const SessionForm: React.FC = () => {
 
     const data = {
       name,
+      startDate,
       time: timer,
     };
 
