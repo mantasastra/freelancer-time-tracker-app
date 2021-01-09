@@ -6,28 +6,28 @@ import Button from "react-bootstrap/Button";
 import formatTime from "../../utils/formatTime";
 
 type Props = {
+  status: string;
   timer: number;
-  isActive: boolean;
   startTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
 };
 
 const TimerField: React.FC<Props> = ({
+  status,
   timer,
-  isActive,
   startTimer,
   stopTimer,
   resetTimer,
 }) => (
   <Row className="justify-content-center">
-    <h1>{formatTime(timer)}</h1>
+    <h1 data-testid="timer">{formatTime(timer)}</h1>
     <Row>
       <Button
         variant="success"
         className="m-1"
         onClick={startTimer}
-        disabled={isActive}
+        disabled={status === "started"}
       >
         Start
       </Button>
@@ -35,7 +35,7 @@ const TimerField: React.FC<Props> = ({
         variant="dark"
         className="m-1"
         onClick={stopTimer}
-        disabled={!isActive}
+        disabled={status === "idle" || status === "stopped"}
       >
         Pause
       </Button>
@@ -43,7 +43,7 @@ const TimerField: React.FC<Props> = ({
         variant="danger"
         className="m-1"
         onClick={resetTimer}
-        disabled={!timer}
+        disabled={status === "idle"}
       >
         Reset
       </Button>

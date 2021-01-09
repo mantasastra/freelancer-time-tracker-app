@@ -9,13 +9,15 @@ const Navigation = () => {
 
   return (
     <Navbar collapseOnSelect bg="light" expand="lg">
-      <Navbar.Brand>Freelancer Time Tracker</Navbar.Brand>
+      <Navbar.Brand data-testid="nav-title">
+        Freelancer Time Tracker
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse
         id="responsive-navbar-nav"
         className="justify-content-end"
       >
-        <Nav activeKey={location.pathname}>
+        <Nav data-testid="nav-links" activeKey={location.pathname}>
           <Nav.Link as={NavLink} exact to="/">
             New Session
           </Nav.Link>

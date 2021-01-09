@@ -1,14 +1,17 @@
 import React, { ChangeEvent, useState, useRef } from "react";
 
+import request from "../../utils/request";
+
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import TimerField from "../timerField/TimerField";
+import Message from "../message/Message";
 
 type SessionState = {
+  status: string;
   name: string;
   timer: number;
-  isActive: boolean;
-  status: string;
+  message: string | null;
   error: string | null;
 };
 
@@ -18,19 +21,19 @@ type TimerRef = {
 
 const SessionForm: React.FC = () => {
   const [state, setState] = useState<SessionState>({
+    status: "idle",
     name: "",
     timer: 0,
-    isActive: false,
-    status: "idle",
+    message: null,
     error: null,
   });
   const timerRef: TimerRef = useRef(0);
-  const { name, timer, isActive, error } = state;
+  const { status, name, timer, error } = state;
 
   const startTimer = () => {
     setState((prevState) => ({
       ...prevState,
-      isActive: true,
+      status: "started",
     }));
 
     timerRef.current = setInterval(() => {
@@ -46,20 +49,20 @@ const SessionForm: React.FC = () => {
 
     setState((prevState) => ({
       ...prevState,
-      isActive: false,
+      status: "stopped",
     }));
   };
 
   const resetTimer = () => {
     clearInterval(timerRef.current as number);
 
-    setState((prevState) => ({
-      ...prevState,
+    setState({
+      status: "idle",
       name: "",
       timer: 0,
-      isActive: false,
+      message: null,
       error: null,
-    }));
+    });
   };
 
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,21 +87,29 @@ const SessionForm: React.FC = () => {
       status: "processing",
     }));
 
-    await fetch("http://localhost:8000/api/session/add", {
+    await request("/session/add", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(async (res) => {
-      const result = await res.json();
+      if (!res.ok) {
+        const { error } = await res.json();
 
-      console.log(result);
+        setState((prevState) => ({
+          ...prevState,
+          status: "failed",
+          error,
+        }));
+      } else {
+        const { message } = await res.json();
 
-      resetTimer();
+        resetTimer();
 
-      setState((prevState) => ({
-        ...prevState,
-        status: "processed",
-      }));
+        setState((prevState) => ({
+          ...prevState,
+          status: "processed",
+          message,
+        }));
+      }
     });
   };
 
@@ -107,6 +118,7 @@ const SessionForm: React.FC = () => {
       <Form.Group controlId="session-name">
         <Form.Label>Name</Form.Label>
         <Form.Control
+          data-testid="session-name"
           name="name"
           type="text"
           placeholder="Enter session name"
@@ -116,7 +128,7 @@ const SessionForm: React.FC = () => {
       </Form.Group>
       <TimerField
         timer={timer}
-        isActive={isActive}
+        status={status}
         startTimer={startTimer}
         stopTimer={stopTimer}
         resetTimer={resetTimer}
@@ -126,10 +138,11 @@ const SessionForm: React.FC = () => {
         type="submit"
         className="mt-3"
         block
-        disabled={error != null || !name || !timer || isActive}
+        disabled={error != null || !name || !timer || status === "idle"}
       >
         Save
       </Button>
+      <Message status={status} successMessage={state.message} error={error} />
     </Form>
   );
 };
