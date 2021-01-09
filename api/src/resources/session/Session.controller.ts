@@ -48,6 +48,12 @@ export const getAllSessions = (
       });
     }
 
-    res.json(sessions);
+    const transformedSessions = sessions.map((session) => ({
+      name: session.name,
+      time: session.time,
+      startDate: session.startDate,
+    }));
+
+    res.json(transformedSessions);
   });
 };

@@ -92,7 +92,7 @@ const SessionForm: React.FC = () => {
       status: "processing",
     }));
 
-    await request("/session/add", {
+    await request("http://localhost:8000/api/session/add", {
       method: "POST",
       body: JSON.stringify(data),
     }).then(async (res) => {

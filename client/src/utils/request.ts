@@ -4,12 +4,10 @@ type Options = {
   data?: Object;
 };
 
-const baseURL = "http://localhost:8000/api";
-
-const request = async (endpoint: string, options: Options) => {
+const request = async (url: string, options: Options) => {
   const { method, body } = options;
 
-  return await fetch(`${baseURL}${endpoint}`, {
+  return await fetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
     body,

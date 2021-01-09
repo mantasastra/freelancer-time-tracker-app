@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export interface ISession extends mongoose.Document {
   name: string;
   time: number;
+  startDate: string;
 }
 
 const SessionSchema = new mongoose.Schema({
