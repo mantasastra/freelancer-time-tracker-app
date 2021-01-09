@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import BeatLoader from "react-spinners/BeatLoader";
 
 import request from "../../utils/request";
 
 import Row from "react-bootstrap/Row";
 import Column from "react-bootstrap/Col";
 import SessionList from "../../components/sessionList/SessionList";
+import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 
 export type Session = {
   name: string;
@@ -60,25 +60,23 @@ const Sessions: React.FC = () => {
 
   return (
     <>
-      {status === "processing" ? (
-        <Row data-testid="loading" className="justify-content-center mt-5">
-          <BeatLoader size={10} color={"hsl(205, 100%, 56%)"} />
-        </Row>
-      ) : (
-        <Column
-          className=" justify-content-center mt-5"
-          style={{ width: "30rem" }}
-        >
-          <h1>Your saved sessions</h1>
-
-          <SessionList sessions={sessions} />
-        </Column>
-      )}
       {status === "failed" ? (
         <Row className="justify-content-center mt-5">
           <h1>{error}</h1>
         </Row>
       ) : null}
+      <Column
+        className=" justify-content-center mt-5"
+        style={{ width: "30rem" }}
+      >
+        <h1>Your saved sessions</h1>
+
+        {status === "processing" ? (
+          <LoadingSpinner />
+        ) : (
+          <SessionList sessions={sessions} />
+        )}
+      </Column>
     </>
   );
 };

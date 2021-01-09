@@ -1,4 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import isSameDay from "date-fns/isSameDay";
+import startOfWeek from "date-fns/startOfWeek";
+import startOfMonth from "date-fns/startOfMonth";
+import endOfWeek from "date-fns/endOfWeek";
+import endOfMonth from "date-fns/endOfMonth";
+
+import transformSessions from "./helpers/transformSessions";
+import filterSessionsByRange from "./helpers/filterSessionsByRange";
 import Session from "./Session.model";
 
 type Data = {
@@ -48,12 +56,56 @@ export const getAllSessions = (
       });
     }
 
-    const transformedSessions = sessions.map((session) => ({
-      name: session.name,
-      time: session.time,
-      startDate: session.startDate,
-    }));
+    const transformedSessions = transformSessions(sessions);
 
     res.json(transformedSessions);
+  });
+};
+
+/**
+ * GET /api/session/overview
+ **/
+export const getOverview = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  Session.find({}, (err, sessions) => {
+    if (err) {
+      res.status(400);
+      res.json({
+        error: "There are no saved sessions.",
+      });
+    }
+
+    const currentDate = new Date();
+    const thisWeekStartDate = startOfWeek(currentDate);
+    const thisWeekEndDate = endOfWeek(currentDate);
+    const thisMonthStartDate = startOfMonth(currentDate);
+    const thisMonthEndDate = endOfMonth(currentDate);
+
+    const todaysSessions = sessions.filter(({ startDate }) =>
+      isSameDay(currentDate, new Date(startDate))
+    );
+    const thisWeekSessions = filterSessionsByRange(
+      sessions,
+      thisWeekStartDate,
+      thisWeekEndDate
+    );
+    const thisMonthSessions = filterSessionsByRange(
+      sessions,
+      thisMonthStartDate,
+      thisMonthEndDate
+    );
+
+    const formattedTodaysSessions = transformSessions(todaysSessions);
+    const formattedThisWeekSessions = transformSessions(thisWeekSessions);
+    const formattedThisMonthSessions = transformSessions(thisMonthSessions);
+
+    return res.json({
+      todaysSessions: formattedTodaysSessions,
+      thisWeekSessions: formattedThisWeekSessions,
+      thisMonthSessions: formattedThisMonthSessions,
+    });
   });
 };
