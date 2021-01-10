@@ -17,6 +17,7 @@ The following will need to be implemented before releasing the app to production
 
 - Add E2E tests for the app (mainly around session form)
 - Add API tests for controllers
+- Add the ability to delete saved sessions
 - Implement the ability to create users
   - Add user authentication/authorization in both API and Client
   - Amend the DB data to handle users
@@ -40,6 +41,7 @@ The following will need to be implemented before releasing the app to production
 
 - Implemented using `ReactJS` with `Typescript`
 - Used `Jest` and `react-testing-library` for testing
+- Used `React-bootstrap` for faster, responsive and accessible styling
 
 ## Getting Started
 
@@ -55,13 +57,14 @@ To get a local copy up and running follow these simple steps.
 2. Go to the API `cd ./api`
    1. Install dependencies `yarn`
    2. Create `.env` file in the root of the dir
-   3. Configure the `.env` file as per the example with the provided credentials
+   3. Configure the `.env` file as per the example (`.env.example`) with the provided credentials
    4. Run the API `yarn start`
    5. The API will run on `localhost:8000`
 3. Open a new terminal window and go to the Client `cd ./client`
    1. Install dependencies `yarn`
    2. Run the client `yarn start`
    3. The client will run on `localhost:3000`
+4. You can access the application through `http://localhost:3000`
 
 ## Tests
 
