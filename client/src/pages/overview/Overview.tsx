@@ -1,69 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import request from "../../utils/request";
+import { homepage } from "../../../package.json";
+import useRequest from "../../hooks/useRequest";
 
+import { Session } from "../sessions/Sessions";
+import Row from "react-bootstrap/Row";
 import Column from "react-bootstrap/Col";
 import OverviewCard from "../../components/overviewCard/OverviewCard";
 import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 
+type Data = {
+  todaysSessions: Session[];
+  thisWeekSessions: Session[];
+  thisMonthSessions: Session[];
+};
+
+type State = {
+  status: string;
+  responseData: Data | null;
+  errorMessage: string | null;
+};
+
+const baseURL = new URL(homepage);
+
 const Overview = () => {
-  const [state, setState] = useState({
-    status: "idle",
-    today: 0,
-    thisWeek: 0,
-    thisMonth: 0,
+  const { status, responseData, errorMessage }: State = useRequest({
+    endpoint: `${baseURL}/session/overview`,
   });
 
-  useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
-      status: "processing",
-    }));
-
-    const data = request("http://localhost:8000/api/session/overview", {
-      method: "GET",
-    });
-
-    data.then(async (res) => {
-      if (res.ok) {
-        const {
-          todaysSessions,
-          thisWeekSessions,
-          thisMonthSessions,
-        } = await res.json();
-
-        setState((prevState) => ({
-          ...prevState,
-          status: "processed",
-          today: todaysSessions.length,
-          thisWeek: thisWeekSessions.length,
-          thisMonth: thisMonthSessions.length,
-        }));
-      }
-    });
-  }, []);
-
   return (
-    <Column className=" justify-content-center mt-5" style={{ width: "30rem" }}>
-      <h1>Overview </h1>
-      {state.status === "processing" ? (
-        <LoadingSpinner />
+    <>
+      {status === "failed" ? (
+        <Row className="justify-content-center mt-5">
+          <h2>{errorMessage}</h2>
+        </Row>
       ) : (
-        <>
-          <OverviewCard title="Today" count={state.today} variant="light" />
-          <OverviewCard
-            title="This week"
-            count={state.thisWeek}
-            variant="light"
-          />
-          <OverviewCard
-            title="This month"
-            count={state.thisMonth}
-            variant="light"
-          />
-        </>
+        <Column
+          className=" justify-content-center mt-5"
+          style={{ width: "30rem" }}
+        >
+          <h1>Overview </h1>
+          {status === "processing" ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <OverviewCard
+                title="Today"
+                count={
+                  responseData != null ? responseData.todaysSessions.length : 0
+                }
+                variant="light"
+              />
+              <OverviewCard
+                title="This week"
+                count={
+                  responseData != null
+                    ? responseData.thisWeekSessions.length
+                    : 0
+                }
+                variant="light"
+              />
+              <OverviewCard
+                title="This month"
+                count={
+                  responseData != null
+                    ? responseData.thisMonthSessions.length
+                    : 0
+                }
+                variant="light"
+              />
+            </>
+          )}
+        </Column>
       )}
-    </Column>
+    </>
   );
 };
 

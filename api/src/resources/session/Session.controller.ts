@@ -22,8 +22,7 @@ export const addSession = (req: Request, res: Response, next: NextFunction) => {
   const data: Data = req.body;
 
   if (!data.name || !data.time) {
-    res.status(400);
-    res.json({
+    return res.status(400).json({
       error: "Properties 'name' and 'time' must be present.",
     });
   }
@@ -37,7 +36,11 @@ export const addSession = (req: Request, res: Response, next: NextFunction) => {
   newSession
     .save()
     .then(() => res.json({ message: "Session has been saved" }))
-    .catch((err) => console.error(err));
+    .catch(() => {
+      return res.status(500).json({
+        error: "Something's wrong. Please try again later.",
+      });
+    });
 };
 
 /**
@@ -50,8 +53,7 @@ export const getAllSessions = (
 ) => {
   Session.find({}, (err, sessions) => {
     if (err) {
-      res.status(400);
-      res.json({
+      return res.status(400).json({
         error: "There are no saved sessions.",
       });
     }
@@ -72,8 +74,7 @@ export const getOverview = (
 ) => {
   Session.find({}, (err, sessions) => {
     if (err) {
-      res.status(400);
-      res.json({
+      return res.status(400).json({
         error: "There are no saved sessions.",
       });
     }

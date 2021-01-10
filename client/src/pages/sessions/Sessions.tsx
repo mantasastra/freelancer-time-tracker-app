@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import request from "../../utils/request";
+import { homepage } from "../../../package.json";
+import useRequest from "../../hooks/useRequest";
 
 import Row from "react-bootstrap/Row";
 import Column from "react-bootstrap/Col";
@@ -13,70 +14,39 @@ export type Session = {
   time: number;
 };
 
-type SessionState = {
+type State = {
   status: string;
-  sessions: Session[];
-  error: string | null;
+  responseData: Session[] | null;
+  errorMessage: string | null;
 };
 
+const baseURL = new URL(homepage);
+
 const Sessions: React.FC = () => {
-  const [state, setState] = useState<SessionState>({
-    status: "idle",
-    sessions: [],
-    error: null,
+  const { status, responseData, errorMessage }: State = useRequest({
+    endpoint: `${baseURL}/session/list`,
   });
-  const { status, sessions, error } = state;
-
-  useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
-      status: "processing",
-    }));
-
-    const data = request("http://localhost:8000/api/session/list", {
-      method: "GET",
-    });
-
-    data.then(async (res) => {
-      if (!res.ok) {
-        const { error } = await res.json();
-
-        setState({
-          status: "failed",
-          sessions: [],
-          error,
-        });
-      } else {
-        const sessions = await res.json();
-
-        setState((prevState) => ({
-          ...prevState,
-          sessions,
-          status: "processed",
-        }));
-      }
-    });
-  }, []);
 
   return (
     <>
       {status === "failed" ? (
         <Row className="justify-content-center mt-5">
-          <h1>{error}</h1>
+          <h2>{errorMessage}</h2>
         </Row>
-      ) : null}
-      <Column
-        className=" justify-content-center mt-5"
-        style={{ width: "30rem" }}
-      >
-        <h1>Your saved sessions</h1>
+      ) : (
+        <Column
+          className=" justify-content-center mt-5"
+          style={{ width: "30rem" }}
+        >
+          <h1>Your saved sessions</h1>
 
-        {status === "processing" ? (
-          <LoadingSpinner />
-        ) : (
-          <SessionList sessions={sessions} />
-        )}
-      </Column>
+          {status === "processing" ? (
+            <LoadingSpinner />
+          ) : (
+            <SessionList sessions={responseData != null ? responseData : []} />
+          )}
+        </Column>
+      )}
     </>
   );
 };

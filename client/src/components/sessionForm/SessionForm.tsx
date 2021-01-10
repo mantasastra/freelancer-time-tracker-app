@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState, useRef } from "react";
 
-import request from "../../utils/request";
+import { homepage } from "../../../package.json";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -19,6 +19,8 @@ type SessionState = {
 type TimerRef = {
   current: number | NodeJS.Timeout;
 };
+
+const baseURL = new URL(homepage);
 
 const SessionForm: React.FC = () => {
   const [state, setState] = useState<SessionState>({
@@ -92,8 +94,9 @@ const SessionForm: React.FC = () => {
       status: "processing",
     }));
 
-    await request("http://localhost:8000/api/session/add", {
+    await fetch(`${baseURL}/session/add`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(async (res) => {
       if (!res.ok) {
