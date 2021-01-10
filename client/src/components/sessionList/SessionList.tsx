@@ -24,10 +24,15 @@ const SessionList: React.FC<Props> = ({ sessions }) => {
           <Card key={index} className="m-2">
             <Card.Body>
               <Card.Title>{name.toUpperCase()}</Card.Title>
-              <Card.Subtitle className="text-muted">
+              <Card.Subtitle
+                data-testid={`session-date-${index}`}
+                className="text-muted"
+              >
                 Started: {formattedDate}
               </Card.Subtitle>
-              <Card.Text>Duration: {formatTime(time)}</Card.Text>
+              <Card.Text data-testid={`session-duration-${index}`}>
+                Duration: {formatTime(time)}
+              </Card.Text>
             </Card.Body>
           </Card>
         );

@@ -125,7 +125,7 @@ const SessionForm: React.FC = () => {
   return (
     <Form onSubmit={handleSave}>
       <Form.Group controlId="session-name">
-        <Form.Label>Name</Form.Label>
+        <Form.Label>Session Name</Form.Label>
         <Form.Control
           data-testid="session-name"
           name="name"
