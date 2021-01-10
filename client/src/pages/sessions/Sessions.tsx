@@ -24,7 +24,7 @@ const baseURL = new URL(homepage);
 
 const Sessions: React.FC = () => {
   const { status, responseData, errorMessage }: State = useRequest({
-    endpoint: `${baseURL}/session/list`,
+    endpoint: `${baseURL}api/session/list`,
   });
 
   return (

@@ -40,7 +40,7 @@ The following will need to be implemented before releasing the app to production
 ### Client
 
 - Implemented using `ReactJS` with `Typescript`
-- Used `Jest` and `react-testing-library` for testing
+- Used `Jest`, `react-testing-library` and `msw` for testing
 - Used `React-bootstrap` for faster, responsive and accessible styling
 
 ## Getting Started

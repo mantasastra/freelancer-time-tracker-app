@@ -94,7 +94,7 @@ const SessionForm: React.FC = () => {
       status: "processing",
     }));
 
-    await fetch(`${baseURL}/session/add`, {
+    await fetch(`${baseURL}api/session/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

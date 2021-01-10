@@ -25,7 +25,7 @@ const baseURL = new URL(homepage);
 
 const Overview = () => {
   const { status, responseData, errorMessage }: State = useRequest({
-    endpoint: `${baseURL}/session/overview`,
+    endpoint: `${baseURL}api/session/overview`,
   });
 
   return (
