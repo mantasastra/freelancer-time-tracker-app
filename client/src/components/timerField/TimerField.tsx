@@ -35,7 +35,9 @@ const TimerField: React.FC<Props> = ({
         variant="dark"
         className="m-1"
         onClick={stopTimer}
-        disabled={status === "idle" || status === "stopped"}
+        disabled={
+          status === "idle" || status === "stopped" || status === "processed"
+        }
       >
         Pause
       </Button>
@@ -43,7 +45,7 @@ const TimerField: React.FC<Props> = ({
         variant="danger"
         className="m-1"
         onClick={resetTimer}
-        disabled={status === "idle"}
+        disabled={status === "idle" || status === "processed"}
       >
         Reset
       </Button>

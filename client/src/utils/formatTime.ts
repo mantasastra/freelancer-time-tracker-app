@@ -1,3 +1,8 @@
+/**
+ * Formats the given time to the following format:
+ * "00:00:00"
+ * @param time
+ */
 const formatTime = (time: number): string => {
   const seconds = time % 60;
   const minutes = Math.floor(time / 60) % 60;
