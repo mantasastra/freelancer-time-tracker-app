@@ -59,14 +59,14 @@ const SessionForm: React.FC = () => {
   const resetTimer = () => {
     clearInterval(timerRef.current as number);
 
-    setState({
+    setState((prevState) => ({
+      ...prevState,
       status: "idle",
-      name: "",
       timer: 0,
       startDate: null,
       message: null,
       error: null,
-    });
+    }));
   };
 
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +112,7 @@ const SessionForm: React.FC = () => {
         setState((prevState) => ({
           ...prevState,
           status: "processed",
+          name: "",
           message,
         }));
       }

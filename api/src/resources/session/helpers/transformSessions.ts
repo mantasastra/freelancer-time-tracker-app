@@ -1,7 +1,8 @@
 import { ISession } from "../Session.model";
 
 /**
- * Transforms each session by including only necessary data for the UI
+ * Transforms each session by including only
+ * the name, time & startDate
  * @param sessions
  */
 const transformSessions = (sessions: ISession[]) =>

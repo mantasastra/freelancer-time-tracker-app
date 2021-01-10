@@ -79,8 +79,8 @@ export const getOverview = (
     }
 
     const currentDate = new Date();
-    const thisWeekStartDate = startOfWeek(currentDate);
-    const thisWeekEndDate = endOfWeek(currentDate);
+    const thisWeekStartDate = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const thisWeekEndDate = endOfWeek(currentDate, { weekStartsOn: 1 });
     const thisMonthStartDate = startOfMonth(currentDate);
     const thisMonthEndDate = endOfMonth(currentDate);
 

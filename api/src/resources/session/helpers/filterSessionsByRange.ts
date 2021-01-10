@@ -1,3 +1,4 @@
+import isSameDay from "date-fns/isSameDay";
 import isAfter from "date-fns/isAfter";
 import isBefore from "date-fns/isBefore";
 import { ISession } from "../Session.model";
@@ -19,7 +20,10 @@ const filterSessionsByRange = (
   sessions.filter((session) => {
     const date = new Date(session.startDate);
 
-    return isAfter(date, startDate) && isBefore(date, endDate);
+    return (
+      (isSameDay(date, startDate) || isAfter(date, startDate)) &&
+      (isSameDay(date, endDate) || isBefore(date, endDate))
+    );
   });
 
 export default filterSessionsByRange;
